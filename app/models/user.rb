@@ -7,4 +7,6 @@ class User < ApplicationRecord
          :trackable, :omniauthable
 
   include DeviseTokenAuth::Concerns::User
+
+  has_many :notes, dependent: :destroy
 end
