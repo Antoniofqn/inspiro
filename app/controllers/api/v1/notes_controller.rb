@@ -1,5 +1,4 @@
-class NotesController < ApplicationController
-  before_action :authenticate_user!
+class Api::V1::NotesController < Api::ApiController
 
   def index
     notes = current_user.notes
