@@ -2,7 +2,8 @@
 # As its an error based file, all messages should say the OPPOSITE of the condition.
 #
 ---
-pt-BR:
+en:
   pundit:
     errors:
-      record_belongs_to_user?: "Registro não pertence ao usuário"
+      record_belongs_to_user?: "Record does not belong to user"
+      records_belongs_to_user?: "Records do not belong to user"

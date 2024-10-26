@@ -30,6 +30,9 @@ gem "devise"
 gem "devise_token_auth"
 gem "omniauth"
 gem "pundit"
+gem 'jsonapi-serializer'
+gem "hashid-rails", "~> 1.0"
+gem 'kaminari'
 
 
 group :development, :test do

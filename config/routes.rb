@@ -5,7 +5,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :notes
+      resources :notes do
+        collection do
+          post :associate_tags
+        end
+      end
+      resources :tags
     end
   end
 end

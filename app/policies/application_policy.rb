@@ -53,6 +53,10 @@ class ApplicationPolicy
     record.user == user ? true : __method__
   end
 
+  def records_belongs_to_user?
+    record.pluck(:user_id).uniq == [user.id] ? true : __method__
+  end
+
   def _or *options
     truths = options.flatten.select { |o| o == true }
     errors = options.flatten.reject { |o| o == true }

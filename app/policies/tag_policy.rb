@@ -1,4 +1,4 @@
-class NotePolicy < ApplicationPolicy
+class TagPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.where(user: user)
@@ -23,9 +23,5 @@ class NotePolicy < ApplicationPolicy
 
   def destroy?
     show?
-  end
-
-  def associate_tags?
-    raise_error _and(records_belongs_to_user?)
   end
 end

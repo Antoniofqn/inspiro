@@ -9,4 +9,6 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   has_many :notes, dependent: :destroy
+  has_many :tags, dependent: :destroy
+
 end
