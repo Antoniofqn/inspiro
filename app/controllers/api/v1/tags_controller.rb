@@ -3,22 +3,22 @@ class Api::V1::TagsController < Api::ApiController
 
   def index
     tags = policy_scope(Tag)
-    render json: TagSerializer.new(@tags)
+    render json: Api::V1::TagSerializer.new(@tags)
   end
 
   def show
-    render json: TagSerializer.new(@tag)
+    render json: Api::V1::TagSerializer.new(@tag)
   end
 
   def create
     tag = current_user.tags.new(tag_params)
     tag.save!
-    render json: TagSerializer.new(tag)
+    render json: Api::V1::TagSerializer.new(tag)
   end
 
   def update
     @tag.update!(tag_params)
-    render json: TagSerializer.new(@tag)
+    render json: Api::V1::TagSerializer.new(@tag)
   end
 
   def destroy

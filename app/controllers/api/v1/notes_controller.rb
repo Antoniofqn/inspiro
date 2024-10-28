@@ -69,6 +69,8 @@ class Api::V1::NotesController < Api::ApiController
   end
 
   def assign_tags_to_note(note)
+    return unless params[:note][:tags_attributes].present?
+
     tag_names = params[:note][:tags_attributes].map { |tag| tag[:name] }
     tags = tag_names.map do |name|
       current_user.tags.find_or_create_by!(name: name)

@@ -1,38 +1,44 @@
 require "test_helper"
 
-class NotesControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @note = notes(:one)
+class Api::V1::NotesControllerTest < ActionDispatch::IntegrationTest
+  def setup
+    @user = users(:one) # Fixture user
+    @note = notes(:one) # Fixture note
+    @headers = @user.create_new_auth_token
   end
 
   test "should get index" do
-    get notes_url, as: :json
+    get api_v1_notes_url, headers: @headers
     assert_response :success
   end
 
   test "should create note" do
-    assert_difference("Note.count") do
-      post notes_url, params: { note: { content: @note.content, title: @note.title, user_id: @note.user_id } }, as: :json
+    assert_difference("Note.count", 1) do
+      post api_v1_notes_url,
+        params: { note: { title: "New Note", content: "Test content" } },
+        headers: @headers
     end
-
-    assert_response :created
+    assert_response :success
   end
 
   test "should show note" do
-    get note_url(@note), as: :json
+    get api_v1_note_url(@note), headers: @headers
     assert_response :success
   end
 
   test "should update note" do
-    patch note_url(@note), params: { note: { content: @note.content, title: @note.title, user_id: @note.user_id } }, as: :json
+    patch api_v1_note_url(@note),
+      params: { note: { title: "Updated Note" } },
+      headers: @headers
     assert_response :success
+    @note.reload
+    assert_equal "Updated Note", @note.title
   end
 
   test "should destroy note" do
     assert_difference("Note.count", -1) do
-      delete note_url(@note), as: :json
+      delete api_v1_note_url(@note), headers: @headers
     end
-
     assert_response :no_content
   end
 end
