@@ -25,7 +25,7 @@ class Api::V1::NotesController < Api::ApiController
   def update
     authorize @note
     assign_tags_to_note(@note)
-    @note.update!(note_params)
+    @note.update!(note_params.except(:tags_attributes))
     render json: Api::V1::NoteSerializer.new(@note)
   end
 
