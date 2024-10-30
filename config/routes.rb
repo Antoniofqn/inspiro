@@ -11,6 +11,12 @@ Rails.application.routes.draw do
         end
       end
       resources :tags
+      resources :clusters do
+        member do
+          post :add_notes
+          delete :remove_notes
+        end
+      end
     end
   end
 end

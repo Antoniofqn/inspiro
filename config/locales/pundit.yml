@@ -7,3 +7,4 @@ en:
     errors:
       record_belongs_to_user?: "Record does not belong to user"
       records_belongs_to_user?: "Records do not belong to user"
+      user_owns_notes?: "User does not own selected notes"

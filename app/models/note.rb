@@ -2,6 +2,8 @@ class Note < ApplicationRecord
   belongs_to :user
   has_many :note_tags, dependent: :destroy
   has_many :tags, through: :note_tags
+  has_many :cluster_notes, dependent: :destroy
+  has_many :clusters, through: :cluster_notes
 
   validates :content, presence: true
 

@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_25_000626) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_30_164223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cluster_notes", force: :cascade do |t|
+    t.bigint "cluster_id", null: false
+    t.bigint "note_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cluster_id"], name: "index_cluster_notes_on_cluster_id"
+    t.index ["note_id"], name: "index_cluster_notes_on_note_id"
+  end
+
+  create_table "clusters", force: :cascade do |t|
+    t.string "name"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_clusters_on_user_id"
+  end
 
   create_table "note_tags", force: :cascade do |t|
     t.bigint "note_id", null: false
@@ -70,6 +87,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_25_000626) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "cluster_notes", "clusters"
+  add_foreign_key "cluster_notes", "notes"
+  add_foreign_key "clusters", "users"
   add_foreign_key "note_tags", "notes"
   add_foreign_key "note_tags", "tags"
   add_foreign_key "notes", "users"
