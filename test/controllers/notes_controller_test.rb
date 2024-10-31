@@ -1,6 +1,8 @@
 require "test_helper"
 
 class Api::V1::NotesControllerTest < ActionDispatch::IntegrationTest
+  include FeatureLimits
+
   def setup
     @user = users(:one) # Fixture user
     @note = notes(:one) # Fixture note
@@ -40,5 +42,15 @@ class Api::V1::NotesControllerTest < ActionDispatch::IntegrationTest
       delete api_v1_note_url(@note), headers: @headers
     end
     assert_response :no_content
+  end
+
+  test "can't create over the limit if user is not premium" do
+    i = 1
+    FREE_NOTE_LIMIT.times do
+      Note.create!(title: "Note_#{i}", content: "Content", user: @user)
+      i += 1
+    end
+    post api_v1_notes_url, params: { note: { title: "Note_#{i}", content: "Test content" } }, headers: @headers
+    assert_response :forbidden
   end
 end

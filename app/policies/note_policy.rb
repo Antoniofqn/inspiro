@@ -14,7 +14,7 @@ class NotePolicy < ApplicationPolicy
   end
 
   def create?
-    true
+    raise_error _and(user_can_create_over_note_limit?)
   end
 
   def update?
@@ -27,5 +27,11 @@ class NotePolicy < ApplicationPolicy
 
   def associate_tags?
     raise_error _and(records_belongs_to_user?)
+  end
+
+  private
+
+  def user_can_create_over_note_limit?
+    user.premium? || user.notes.size <= FREE_NOTE_LIMIT ? true : __method__
   end
 end

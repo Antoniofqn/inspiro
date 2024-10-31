@@ -4,6 +4,14 @@ module ApiExceptionHandler
     rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
     rescue_from ActiveRecord::RecordInvalid, with: :unprocessable_entity
     rescue_from ActionController::ParameterMissing, with: :bad_request
+    rescue_from Pundit::NotAuthorizedError do |exception|
+      begin
+        message = JSON.parse(exception.message)
+      rescue JSON::ParserError => e
+        message = []
+      end
+      forbidden(message || [])
+    end
   end
 
   private
@@ -21,5 +29,11 @@ module ApiExceptionHandler
   # 400 - Bad request
   def bad_request(error)
     render json: { error: error.message }, status: :bad_request
+  end
+
+  # 403 - Forbidden
+  def forbidden(*errors)
+    @errors = (errors.flatten.present? ? errors : [I18n.t('api.errors.forbidden')]).flatten.uniq
+    render json: { error: @errors }, status: :forbidden
   end
 end

@@ -2,8 +2,10 @@ one:
   id: 1
   uid: "user1@example.com"
   email: "user1@example.com"
+  plan: "free"
 
 two:
   id: 2
   uid: "user2@example.com"
   email: "user2@example.com"
+  plan: "free"

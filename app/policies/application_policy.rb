@@ -1,4 +1,5 @@
 class ApplicationPolicy
+  include FeatureLimits
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -55,6 +56,10 @@ class ApplicationPolicy
 
   def records_belongs_to_user?
     record.pluck(:user_id).uniq == [user.id] ? true : __method__
+  end
+
+  def user_is_premium?
+    user.premium? ? true : __method__
   end
 
   def _or *options
