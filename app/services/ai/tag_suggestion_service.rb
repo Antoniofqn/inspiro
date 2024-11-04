@@ -19,6 +19,7 @@ module Ai
       "Given the note content:\n\n\"#{@note.content}\"\n\n" \
       "and these existing tags: #{user_tags_list}, " \
       "please identify any relevant existing tags and suggest additional tags if necessary. " \
+      "Keep the number of new suggested tags to a maximun of 3" \
       "Respond in the following JSON format:\n\n" \
       "{ \"relevant_existing_tags\": [\"tag1\", \"tag2\"], \"new_suggested_tags\": [\"tag3\", \"tag4\"] }"
     end
