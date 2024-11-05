@@ -1,5 +1,5 @@
 class Api::V1::NotesController < Api::ApiController
-  before_action :set_note, only: %i[show update destroy]
+  before_action :set_note, only: %i[show update destroy tag_suggestions add_suggested_tags]
   before_action :set_notes, only: :associate_tags
 
   def index
@@ -49,6 +49,24 @@ class Api::V1::NotesController < Api::ApiController
       return render json: { error: 'Invalid action type' }, status: :unprocessable_entity
     end
     render json: Api::V1::NoteSerializer.new(@notes)
+  end
+
+  # related to AI service
+  def tag_suggestions
+    authorize @note
+    suggested_tags = Ai::TagSuggestionService.new(@note).suggest_tags
+    render json: { suggested_tags: suggested_tags }, status: :ok
+  end
+
+  # related to AI service
+  def add_suggested_tags
+    authorize @note
+    tag_names = params[:tag_names] || []
+    tag_names.each do |name|
+      tag = current_user.tags.find_or_create_by!(name: name)
+      @note.tags << tag unless @note.tags.include?(tag)
+    end
+    render json: Api::V1::NoteSerializer.new(@note)
   end
 
   private

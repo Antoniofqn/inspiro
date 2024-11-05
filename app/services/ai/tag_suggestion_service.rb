@@ -19,7 +19,7 @@ module Ai
       "Given the note content:\n\n\"#{@note.content}\"\n\n" \
       "and these existing tags: #{user_tags_list}, " \
       "please identify any relevant existing tags and suggest additional tags if necessary. " \
-      "Keep the number of new suggested tags to a maximun of 3" \
+      "Keep the number of suggested tags to a maximun of 4" \
       "Respond in the following JSON format:\n\n" \
       "{ \"relevant_existing_tags\": [\"tag1\", \"tag2\"], \"new_suggested_tags\": [\"tag3\", \"tag4\"] }"
     end
@@ -27,6 +27,11 @@ module Ai
     # Helper to format the user’s tags as a list
     def user_tags_list
       @user.tags.pluck(:name).join(", ")
+    end
+
+    # Override the default response length
+    def response_length
+      100
     end
 
     # Parse JSON response for relevant existing and new tags

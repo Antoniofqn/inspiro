@@ -10,7 +10,7 @@ class Api::V1::NotesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get api_v1_notes_url, headers: @headers
+    get api_v1_notes_url, headers: @headers, as: :json
     assert_response :success
   end
 
@@ -52,5 +52,14 @@ class Api::V1::NotesControllerTest < ActionDispatch::IntegrationTest
     end
     post api_v1_notes_url, params: { note: { title: "Note_#{i}", content: "Test content" } }, headers: @headers
     assert_response :forbidden
+  end
+
+  test "should add suggested tags" do
+    suggested_tags = ["tag1", "tag2"]
+    post add_suggested_tags_api_v1_note_url(@note), params: { tag_names: suggested_tags }, headers: @headers, as: :json
+    assert_response :success
+    @note.reload
+    assert_includes @note.tags.map(&:name), "tag1"
+    assert_includes @note.tags.map(&:name), "tag2"
   end
 end

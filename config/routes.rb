@@ -12,6 +12,10 @@ Rails.application.routes.draw do
         collection do
           post :associate_tags
         end
+        member do
+          get :tag_suggestions
+          post :add_suggested_tags
+        end
       end
       resources :tags
       resources :clusters do

@@ -29,6 +29,14 @@ class NotePolicy < ApplicationPolicy
     raise_error _and(records_belongs_to_user?)
   end
 
+  def tag_suggestions?
+    show?
+  end
+
+  def add_suggested_tags?
+    show?
+  end
+
   private
 
   def user_can_create_over_note_limit?

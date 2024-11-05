@@ -11,16 +11,18 @@ module Ai
     def fetch_response
       retries = 0
       begin
-        sleep(20 * retries) if retries > 0  # Add delay based on retries
+        sleep(20 * retries) if retries > 0
         response = @client.chat(
           parameters: {
-            model: "gpt-4",  # or "gpt-4" for the GPT-4 model
+            model: "gpt-3.5-turbo",
             messages: [{ role: "user", content: build_prompt }],
             max_tokens: response_length,
-            temperature: temperature
+            temperature: temperature,
+            response_format: {
+              type: 'json_object'
+            }
           }
         )
-        binding.pry
         handle_response(response)
       rescue Faraday::TooManyRequestsError => e
         retries += 1
@@ -47,8 +49,7 @@ module Ai
 
     # Handle AI response parsing
     def handle_response(response)
-      binding.pry
-      response['choices'][0]['text'].strip.split(", ").map(&:downcase)
+      response['choices'][0]['message']['content']
     end
   end
 end
