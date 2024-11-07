@@ -61,4 +61,10 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Use sidekiq for Active Job queueing
+  config.active_job.queue_adapter = :sidekiq
+  config.active_job.queue_name_prefix = "inspiro_test"
+  require 'sidekiq/testing'
+  Sidekiq::Testing.fake!
 end

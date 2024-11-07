@@ -9,7 +9,7 @@ class Note < ApplicationRecord
 
   accepts_nested_attributes_for :tags
 
-  before_save :generate_summary, if: :new_record?
+  after_save :enqueue_summarization, if: -> { saved_change_to_content? }
 
   scope :with_tags, ->(tag_ids) {
     joins(:tags).where(tags: { id: tag_ids }).distinct
@@ -22,7 +22,7 @@ class Note < ApplicationRecord
     tags.map(&:name)
   end
 
-  def generate_summary
-    self.summary = Ai::SummarizationService.new(content).summarize
+  def enqueue_summarization
+    SummarizeNoteJob.perform_async(self.id)
   end
 end

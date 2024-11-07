@@ -35,6 +35,7 @@ gem "hashid-rails", "~> 1.0"
 gem 'kaminari'
 gem 'stripe'
 gem 'ruby-openai'
+gem 'sidekiq'
 
 
 
