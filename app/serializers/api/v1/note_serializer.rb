@@ -6,7 +6,7 @@ module Api
 
       set_id :hashid
 
-      attributes :title, :content
+      attributes :title, :content, :summary
 
       attribute :tags do |object|
         object.tags.map do |tag|
