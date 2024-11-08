@@ -82,3 +82,4 @@ production:
   database: inspiro_production
   username: inspiro
   password: <%= ENV["INSPIRO_DATABASE_PASSWORD"] %>
+  url: <%= ENV["DATABASE_URL"] %>
