@@ -1,4 +1,5 @@
-class ResetSearchCountJob < ApplicationJob
+class ResetSearchCountJob
+  include Sidekiq::Job
   queue_as :default
 
   def perform
