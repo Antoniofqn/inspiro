@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :notes do
         collection do
           post :associate_tags
+          get :semantic_search
         end
         member do
           get :tag_suggestions

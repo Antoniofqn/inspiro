@@ -42,4 +42,8 @@ class NotePolicy < ApplicationPolicy
   def user_can_create_over_note_limit?
     user.premium? || user.notes.size <= FREE_NOTE_LIMIT ? true : __method__
   end
+
+  def user_can_search?
+    user.can_perform_search? ? true : __method__
+  end
 end

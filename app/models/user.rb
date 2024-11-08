@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   extend Devise::Models
+  include FeatureLimits
 
   # Include default devise modules.
   devise :database_authenticatable, :registerable,
@@ -20,5 +21,13 @@ class User < ApplicationRecord
 
   def premium?
     plan == 'premium'
+  end
+
+  def can_perform_search?
+    premium? || search_count < FREE_SEARCH_LIMIT
+  end
+
+  def increment_search_count
+    update_column(:search_count, search_count + 1)
   end
 end

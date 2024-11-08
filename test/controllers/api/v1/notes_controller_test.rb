@@ -1,4 +1,5 @@
 require "test_helper"
+require 'minitest/autorun'
 
 class Api::V1::NotesControllerTest < ActionDispatch::IntegrationTest
   include FeatureLimits
@@ -6,6 +7,7 @@ class Api::V1::NotesControllerTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:one) # Fixture user
     @note = notes(:one) # Fixture note
+    @note2 = notes(:two) # Fixture note
     @headers = @user.create_new_auth_token
   end
 

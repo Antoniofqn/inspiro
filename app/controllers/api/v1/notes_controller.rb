@@ -69,6 +69,15 @@ class Api::V1::NotesController < Api::ApiController
     render json: Api::V1::NoteSerializer.new(@note)
   end
 
+  # related to AI service
+  def semantic_search
+    authorize Note
+    query = params[:query]
+    @q = Ai::SemanticSearchService.new(query, current_user).search_notes
+    @notes = @q.page(params[:page]).per(params[:per_page])
+    render json: Api::V1::NoteSerializer.new(@results, meta: serializer_meta(@notes, @q) )
+  end
+
   private
 
   def set_notes

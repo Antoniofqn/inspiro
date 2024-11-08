@@ -5,9 +5,11 @@ one:
   title: MyString
   content: MyText
   user_id: 1
+  summary: MyString
 
 two:
   id: 2
   title: MyString
   content: MyText
   user_id: 2
+  summary: MyString

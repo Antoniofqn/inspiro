@@ -10,3 +10,4 @@ en:
       user_owns_notes?: "User does not own selected notes"
       user_is_premium?: "Feature is not available for non-premium users"
       user_can_create_over_note_limit?: "User cannot create more notes, upgrade to premium"
+      user_can_search?: "User has reached search limit, upgrade to premium"
