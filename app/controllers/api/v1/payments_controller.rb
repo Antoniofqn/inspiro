@@ -3,7 +3,7 @@ class Api::V1::PaymentsController < Api::ApiController
   # Create a checkout session
   def create_checkout_session
     begin
-      root_url = "http://localhost:3000"
+      root_url = ENV['ROOT_URL']
       session = Stripe::Checkout::Session.create({
         mode: 'subscription',
         line_items: [{
@@ -12,9 +12,6 @@ class Api::V1::PaymentsController < Api::ApiController
         }],
         success_url: "#{root_url}/payments/success?session_id={CHECKOUT_SESSION_ID}",
         cancel_url: "#{root_url}/payments/cancel",
-        subscription_data: {
-          trial_period_days: 7
-        },
         customer_email: current_user.email
       })
 
