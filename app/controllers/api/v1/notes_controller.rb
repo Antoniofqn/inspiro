@@ -2,6 +2,10 @@ class Api::V1::NotesController < Api::ApiController
   before_action :set_note, only: %i[show update destroy tag_suggestions add_suggested_tags]
   before_action :set_notes, only: :associate_tags
 
+  api :GET, '/notes', 'List all notes'
+  param :tag_ids, Array, desc: 'Filter notes by tag ids'
+  param :page, :number, desc: 'Page number'
+  param :per_page, :number, desc: 'Number of notes per page'
   def index
     @q = policy_scope(Note).includes(:tags)
     @q = @q.with_tags(Decoder.bulk_decode_ids(Tag, params[:tag_ids])) if params[:tag_ids].present?
@@ -9,11 +13,22 @@ class Api::V1::NotesController < Api::ApiController
     render json: Api::V1::NoteSerializer.new(@notes, meta: serializer_meta(@notes, @q))
   end
 
+  api :GET, '/notes/:id', 'Show a note'
+  param :id, :number, required: true
   def show
     authorize @note
     render json: Api::V1::NoteSerializer.new(@note)
   end
 
+  api :POST, '/notes', 'Create a note'
+  param :note, Hash, required: true do
+    param :title, String, required: true
+    param :content, String, required: true
+    param :tags_attributes, Array, desc: 'Array of tag attributes' do
+      param :name, String, required: true
+      param :_destroy, [true, false], desc: 'Mark tag for destruction'
+    end
+  end
   def create
     @note = Note.new(note_params.merge(user: current_user))
     authorize @note
@@ -22,6 +37,13 @@ class Api::V1::NotesController < Api::ApiController
     render json: Api::V1::NoteSerializer.new(@note)
   end
 
+  api :PATCH, '/notes/:id', 'Update a note'
+  param :id, :number, required: true
+  param :note, Hash, required: true do
+    param :title, String
+    param :content, String
+    param :tags_attributes, Array, desc: 'Array of tag names'
+  end
   def update
     authorize @note
     assign_tags_to_note(@note)
@@ -29,12 +51,19 @@ class Api::V1::NotesController < Api::ApiController
     render json: Api::V1::NoteSerializer.new(@note)
   end
 
+  api :DELETE, '/notes/:id', 'Delete a note'
+  param :id, :number, required: true
   def destroy
     authorize @note
     @note.destroy
     render json: { message: 'Note successfully deleted' }, status: :no_content
   end
 
+  # Add multiple tags to multiple notes
+  api :POST, '/notes/associate_tags', 'Associate tags to notes'
+  param :note_ids, Array, desc: 'Array of note ids', required: true
+  param :tag_ids, Array, desc: 'Array of tag ids', required: true
+  param :action_type, %w[add remove], desc: 'Action type', required: true
   def associate_tags
     authorize @notes
     tag_ids = params[:tag_ids] || []
@@ -52,6 +81,8 @@ class Api::V1::NotesController < Api::ApiController
   end
 
   # related to AI service
+  api :GET, '/notes/:id/tag_suggestions', 'Get tag suggestions for a note'
+  param :id, :number, required: true
   def tag_suggestions
     authorize @note
     suggested_tags = Ai::TagSuggestionService.new(@note).suggest_tags
@@ -59,6 +90,9 @@ class Api::V1::NotesController < Api::ApiController
   end
 
   # related to AI service
+  api :POST, '/notes/:id/add_suggested_tags', 'Add suggested tags to a note'
+  param :id, :number, required: true
+  param :tag_names, Array, desc: 'Array of tag names', required: true
   def add_suggested_tags
     authorize @note
     tag_names = params[:tag_names] || []
@@ -70,6 +104,10 @@ class Api::V1::NotesController < Api::ApiController
   end
 
   # related to AI service
+  api :GET, '/notes/semantic_search', 'Search notes using semantic search'
+  param :query, String, required: true
+  param :page, :number, desc: 'Page number'
+  param :per_page, :number, desc: 'Number of notes per page'
   def semantic_search
     authorize Note
     query = params[:query]
